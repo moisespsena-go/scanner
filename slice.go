@@ -16,6 +16,14 @@ func NewSlice(next RowsHandler, start int, length int) *Slice {
 }
 
 func (s *Slice) NewInitializer(columns []string) RowInitializer {
+	if len(columns) == 0 || len(columns[s.Start:s.Start+s.Length]) == 0 {
+		return RowInitializerFunc(func(columns []string, dst []any) (record func(dst []any) (_ any, err error), err error) {
+			record = func(dst []any) (r any, err error) {
+				return
+			}
+			return
+		})
+	}
 	iz := s.Next.NewInitializer(columns[s.Start : s.Start+s.Length])
 	return RowInitializerFunc(func(columns []string, dst []any) (record func(dst []any) (_ any, err error), err error) {
 		var (
